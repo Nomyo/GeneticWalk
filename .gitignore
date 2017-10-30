@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+CMackeCache.txt
+CMakefiles
+Makefiles
+cmake_install.cmake
+GeneticWalk
