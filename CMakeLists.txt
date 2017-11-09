@@ -3,7 +3,7 @@ project(GeneticWalk)
 
 #set(CMAKE_CXX_COMPILER "g++")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pedantic -g -O0 -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pedantic -g -O0 -Wall -Wextra -Iinc")
 
 set(
 
@@ -11,6 +11,11 @@ set(
 
   src/main.cc
   src/glad.c
+
+  src/camera.cc
+  src/glob_conf.cc
+  src/opengl-utils.cc
+  src/shader_m.cc
   )
 
 

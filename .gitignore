@@ -33,6 +33,6 @@
 
 CMackeCache.txt
 CMakefiles
-Makefiles
+Makefile
 cmake_install.cmake
 GeneticWalk
