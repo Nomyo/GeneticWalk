@@ -71,6 +71,5 @@ void GlobalConf::scroll_callback(GLFWwindow* /*window*/, double /*xoffset*/,
 			    double yoffset)
 {
     auto camera = get_instance().get_camera();
-    std::cout << "scroll" << std::endl;
     camera->process_mouse_scroll(yoffset);
 }

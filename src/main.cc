@@ -2,40 +2,11 @@
 
 int start_opengl()
 {
-  glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-  GLFWwindow* window = glfwCreateWindow(GlobalConf::SCR_WIDTH,
-					GlobalConf::SCR_HEIGHT,
-					"GeneticWalk", NULL, NULL);
-  if (window == NULL)
-  {
-    std::cout << "Failed to create GLFW window" << std::endl;
-    glfwTerminate();
-    return -1;
-  }
-
+  GLFWwindow *window = window_init();
+  if (!window)
+    return 1;
   auto& global_conf = GlobalConf::get_instance();
-  auto camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f),
-			   glm::vec3(0.0f, 1.0f, 0.0f));
-
-  global_conf.init(camera);
-
-  glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-  glfwSetCursorPosCallback(window, &GlobalConf::mouse_callback);
-  glfwSetScrollCallback(window, &GlobalConf::scroll_callback);
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-  {
-    std::cout << "Failed to initialize GLAD" << std::endl;
-    return -1;
-  }
-
-  glEnable(GL_DEPTH_TEST);
+  auto camera = global_conf.get_camera();
 
   unsigned int VBO;
   unsigned int VAO;
@@ -47,19 +18,23 @@ int start_opengl()
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+  // position
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
+
+  // color attribute
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 
+  unsigned int texture1 = gen_texture("grass.jpg");
+
   // Create our shader
   Shader our_shader("shaders/basic.vs", "shaders/basic.fs");
-  // Shader our_model_shader("shaders/model.vs", "shaders/model.fs");
-  // Shader our_lamp_shader("shaders/lamp.vs", "shaders/lamp.fs");
-
-  our_shader.use();
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //our_shader.use();
+  //our_shader.setInt("texture1", 0);
 
   while (!glfwWindowShouldClose(window))
   {
@@ -77,6 +52,10 @@ int start_opengl()
     // ------
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // bind textures
+    //glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture1);
 
     // activate shader
     our_shader.use();

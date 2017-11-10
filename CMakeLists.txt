@@ -16,6 +16,7 @@ set(
   src/glob_conf.cc
   src/opengl-utils.cc
   src/shader_m.cc
+  src/stb_image.cc
   )
 
 
