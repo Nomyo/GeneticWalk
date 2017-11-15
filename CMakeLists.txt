@@ -17,6 +17,8 @@ set(
   src/opengl-utils.cc
   src/shader_m.cc
   src/stb_image.cc
+  src/mesh.cc
+  src/model.cc
   )
 
 
@@ -33,3 +35,4 @@ target_link_libraries(GeneticWalk Xcursor)
 target_link_libraries(GeneticWalk X11)
 target_link_libraries(GeneticWalk Xxf86vm)
 target_link_libraries(GeneticWalk pthread)
+target_link_libraries(GeneticWalk assimp)

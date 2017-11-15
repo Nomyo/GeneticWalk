@@ -8,33 +8,11 @@ int start_opengl()
   auto& global_conf = GlobalConf::get_instance();
   auto camera = global_conf.get_camera();
 
-  unsigned int VBO;
-  unsigned int VAO;
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-
-  glBindVertexArray(VAO);
-
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-  // position
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
-  glEnableVertexAttribArray(0);
-
-  // color attribute
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
-  glEnableVertexAttribArray(1);
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-
-  unsigned int texture1 = gen_texture("grass.jpg");
-
   // Create our shader
-  Shader our_shader("shaders/basic.vs", "shaders/basic.fs");
-  //our_shader.use();
-  //our_shader.setInt("texture1", 0);
+  Shader our_shader("shaders/model.vs", "shaders/model.fs");
+
+  auto orc_model = Model("models/characters/Models/Non-rigged/basicCharacter.obj",
+			 "models/characters/Skins/Basic/skin_orc.png", "", false);
 
   while (!glfwWindowShouldClose(window))
   {
@@ -53,9 +31,6 @@ int start_opengl()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // bind textures
-    //glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture1);
 
     // activate shader
     our_shader.use();
@@ -71,18 +46,14 @@ int start_opengl()
 
     // render object
     // -------------
-    glBindVertexArray(VAO);
-    for (unsigned int i = 0; i < 10; i++)
-    {
-      glm::mat4 model;
-      model = glm::translate(model, cubePositions[i]);
-      float angle = 20.0f * i;
-      model = glm::rotate(model, glm::radians(angle),
-			  glm::vec3(1.0f, 0.3f, 0.5f));
-      our_shader.setMat4("model", model);
+    glm::mat4 model;
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+    model = glm::rotate(model, glm::radians(0.0f),
+			glm::vec3(1.0f, 0.3f, 0.5f));
+    our_shader.setMat4("model", model);
 
-      glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
+    orc_model.draw(our_shader);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
