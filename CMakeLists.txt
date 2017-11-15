@@ -19,6 +19,7 @@ set(
   src/stb_image.cc
   src/mesh.cc
   src/model.cc
+  src/world.cc
   )
 
 

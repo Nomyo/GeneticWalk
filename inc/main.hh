@@ -12,6 +12,7 @@
 #include <opengl-utils.hh>
 #include <shader_m.hh>
 #include <model.hh>
+#include <world.hh>
 
 float vertices[] = {
   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
