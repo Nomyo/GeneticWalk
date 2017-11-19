@@ -92,3 +92,8 @@ void Mesh::setup_mesh()
 
   glBindVertexArray(0);
 }
+
+std::vector<Vertex> Mesh::get_vertices() const
+{
+  return vertices_;
+}

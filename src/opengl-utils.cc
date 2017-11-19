@@ -1,5 +1,8 @@
 #include <opengl-utils.hh>
 #include <cassert>
+#include <character.hh>
+#include <functional>
+#include <ctime>
 
 void framebuffer_size_callback(GLFWwindow */*window*/, int width, int height)
 {
@@ -72,4 +75,51 @@ GLFWwindow *window_init()
 
   glEnable(GL_DEPTH_TEST);
   return window;
+}
+
+static std::string choose_texture()
+{
+  std::random_device rd;
+  std::mt19937 eng(rd());
+  std::uniform_int_distribution<> distr(0, 7);
+
+  auto rand = std::bind(distr, eng);
+  auto r = rand();
+  std::string texture = "models/characters/Skins/Basic/" +
+    Character::character_textures[r] + ".png";
+
+  return texture;
+}
+
+std::vector<Character> create_population(const World& w,
+				      unsigned int nb_population)
+{
+  auto population = std::vector<Character>{};
+
+  // Create characters
+  for (unsigned int i = 0; i < nb_population; ++i)
+  {
+    std::string texture = "";
+
+    auto model = Model("models/characters/Models/Non-rigged/basicCharacter.obj",
+		       choose_texture(), "", false);
+
+    auto orc = Character(Entity(model, w.get_startpoint(),
+				glm::vec3{0.0f, 0.0f, 0.0f}, 0.11f));
+
+    population.push_back(orc);
+  }
+
+  // Set their DNA
+  std::srand(std::time(0));
+  for (auto& person : population)
+  {
+    for (auto n = 0u; n < 200 * 10; ++n)
+    {
+      int r_nb = std::rand() % 8; // Mode the number of instruction
+      person.add_to_DNA(static_cast<Character::Action>(r_nb));
+    }
+  }
+
+  return population;
 }

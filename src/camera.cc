@@ -37,6 +37,15 @@ glm::mat4 Camera::get_view_matrix()
     return glm::lookAt(position_, position_ + target_, up_);
 }
 
+void Camera::set_camera(const glm::vec3& position, const glm::vec3& up,
+			float yaw, float pitch)
+{
+    position_ = position;
+    up_ = up;
+    yaw_ = yaw;
+    pitch_ = pitch;
+}
+
 glm::vec3 Camera::get_view_pos()
 {
     return position_;

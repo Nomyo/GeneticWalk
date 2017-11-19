@@ -13,6 +13,9 @@
 #include <shader_m.hh>
 #include <model.hh>
 #include <world.hh>
+#include <world-renderer.hh>
+#include <entity.hh>
+#include <entity-renderer.hh>
 
 float vertices[] = {
   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

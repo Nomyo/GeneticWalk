@@ -7,6 +7,9 @@
 #include <string>
 
 #include <glob_conf.hh>
+#include <entity.hh>
+#include <world.hh>
+#include <character.hh>
 
 /**
  * Whenever the window size changes this funtion is called
@@ -22,3 +25,9 @@ unsigned int gen_texture(const std::string& path);
  * Initialisation of the screen
  */
 GLFWwindow *window_init();
+
+/**
+ * Create population of GA algorithm
+ */
+std::vector<Character> create_population(const World& w,
+					 unsigned int nb_population);

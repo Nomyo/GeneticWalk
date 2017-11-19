@@ -31,6 +31,8 @@ public:
 
     virtual glm::mat4 get_view_matrix();
     virtual glm::vec3 get_view_pos();
+    virtual void set_camera(const glm::vec3& position, const glm::vec3& up,
+			    float yaw, float pitch);
     virtual float get_zoom();
     virtual void boosted(float factor);
     virtual void process_keyboard(Camera_movement dir, float delta_time);
@@ -52,7 +54,7 @@ protected:
     float yaw_   = -90.0f;
     float pitch_ = 0.0f;
 
-    float movement_speed_     = 4.5f;
+    float movement_speed_     = 8.5f;
     float boost_factor_       = 2.0f;
     float mouse_sensitivity_  = 0.1f;
     float zoom_               = 45.0f;

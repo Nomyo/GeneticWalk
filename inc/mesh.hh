@@ -39,6 +39,7 @@ public:
        std::vector<Texture> textures);
 
   void draw(Shader shader);
+  std::vector<Vertex> get_vertices() const;
 
 private:
   void setup_mesh();

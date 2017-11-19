@@ -13,6 +13,7 @@ set(
   src/glad.c
 
   src/camera.cc
+  src/character.cc
   src/glob_conf.cc
   src/opengl-utils.cc
   src/shader_m.cc
@@ -20,6 +21,9 @@ set(
   src/mesh.cc
   src/model.cc
   src/world.cc
+  src/world-renderer.cc
+  src/entity.cc
+  src/entity-renderer.cc
   )
 
 

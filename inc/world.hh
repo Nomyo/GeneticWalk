@@ -16,7 +16,8 @@ class World
 {
 public:
   World(unsigned int width, unsigned int height);
-  World(unsigned int width, unsigned int height, struct zone z);
+  World(unsigned int width, unsigned int height, struct zone z,
+	glm::vec3 startpoint);
   World(Mesh mesh);
   World(Mesh mesh, struct zone z);
 
@@ -24,10 +25,15 @@ public:
 
   void draw(Shader shader);
   void create_mesh();
+  glm::vec3 get_startpoint() const;
+  struct zone get_endzone() const;
+  bool is_in_endzone(float x, float y);
+  Mesh get_mesh() const;
 
 private:
   Mesh mesh_;
   struct zone endzone_;
+  glm::vec3 startpoint_;
   unsigned int width_;
   unsigned int height_;
 };
