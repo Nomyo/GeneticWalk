@@ -8,9 +8,21 @@
 #include <vector>
 #include <cstdint>
 
+#include <world.hh>
+
+struct GVec3Comp
+{
+  bool operator()(const glm::vec3& lhs, const glm::vec3& rhs)
+    {
+      return (lhs.x < rhs.x || lhs.x == rhs.x ) &&
+	(lhs.y < rhs.y || lhs.y == rhs.y) && (lhs.z < rhs.z);
+    }
+};
+
 class Character : public Entity
 {
 public:
+  using Pos_map = std::map<glm::vec3, unsigned int, GVec3Comp>;
   static std::vector<std::string> character_textures;
 
   enum class Action : std::int8_t
@@ -42,14 +54,23 @@ public:
   Character(const Entity& entity);
   ~Character() = default;
 
-  void update();
+  void update(const World& w);
   void update_falling();
-  void update_living();
+  void update_living(const World& w);
   void add_to_DNA(Action a);
+  const std::vector<Action>& get_DNA() const;
+  void switch_DNA(unsigned int index, Action a);
+  void replace_DNA(const std::vector<Action>& dna);
+  void set_state(CharacterState s);
+  CharacterState get_state() const;
+  const Pos_map get_position_passed() const;
+  bool dead_or_done() const;
 
 private:
   float speed_ = 0.25f;
   std::vector<Action> DNA_instructions_;
   std::uint64_t DNA_index_ = 0;
   CharacterState state_ = CharacterState::ALIVE;
+
+  Pos_map positions_;
 };

@@ -27,7 +27,8 @@ public:
   void create_mesh();
   glm::vec3 get_startpoint() const;
   struct zone get_endzone() const;
-  bool is_in_endzone(float x, float y);
+  float dist_to_endzone(glm::vec3 p) const;
+  bool in_endzone(glm::vec3 position) const;
   Mesh get_mesh() const;
 
 private:

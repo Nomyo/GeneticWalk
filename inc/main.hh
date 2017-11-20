@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 #include <glob_conf.hh>
 #include <opengl-utils.hh>
@@ -16,6 +17,7 @@
 #include <world-renderer.hh>
 #include <entity.hh>
 #include <entity-renderer.hh>
+#include <ga_core.hh>
 
 float vertices[] = {
   -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

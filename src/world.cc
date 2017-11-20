@@ -91,16 +91,21 @@ struct zone World::get_endzone() const
   return endzone_;
 }
 
-bool World::is_in_endzone(float x, float y)
+float World::dist_to_endzone(glm::vec3 p) const
 {
-  float sq_radius = endzone_.radius;
-  float sq_center_x = endzone_.coord.x;
-  float sq_center_y = endzone_.coord.y;
-
-  return ((x - sq_center_x) + (y - sq_center_y) < sq_radius);
+  return sqrt(pow((endzone_.coord.x - p.x), 2) + pow((endzone_.coord.y - p.z), 2));
 }
 
 Mesh World::get_mesh() const
 {
   return mesh_;
+}
+
+bool World::in_endzone(glm::vec3 position) const
+{
+  float nq_endz_x = (position.x - endzone_.coord.x);
+  float nq_endz_y = (position.z - endzone_.coord.y);
+  float sq_endz_r = endzone_.radius * endzone_.radius;
+
+  return (nq_endz_x * nq_endz_x + nq_endz_y * nq_endz_y) < sq_endz_r;
 }

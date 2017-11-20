@@ -18,10 +18,12 @@ int start_opengl()
   ez.coord = glm::vec2(30.0f, 30.0f);
   ez.radius = 1.f;
   auto world = World(50, 50, ez, glm::vec3(15.0f, 0.0f, 15.0f));
-  auto population = create_population(world, 10);
+  auto population = create_population(world);
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   float updateFrame = 0.0f;
+  long nb_gen = 0;
+  std::cout << "GEN : " << nb_gen++ << std::endl;
   while (!glfwWindowShouldClose(window))
   {
     // per-frame time logic
@@ -57,13 +59,20 @@ int start_opengl()
 
     // update_population
     // -----------------
-    if (updateFrame >= 0.035f)
+    if (updateFrame >= 0.005f)
     {
       for (auto& p : population)
-	p.update();
+	p.update(world);
 
       updateFrame = 0.0f;
     }
+
+    if (std::all_of(population.begin(), population.end(), [](Character c)
+		    { return c.dead_or_done(); }))
+      {
+	std::cout << "GEN : " << nb_gen++ << std::endl;
+	population = create_next_generation(population, world);
+      }
 
     glfwSwapBuffers(window);
     glfwPollEvents();

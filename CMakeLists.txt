@@ -24,6 +24,7 @@ set(
   src/world-renderer.cc
   src/entity.cc
   src/entity-renderer.cc
+  src/ga_core.cc
   )
 
 

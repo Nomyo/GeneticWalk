@@ -77,7 +77,7 @@ GLFWwindow *window_init()
   return window;
 }
 
-static std::string choose_texture()
+std::string choose_texture()
 {
   std::random_device rd;
   std::mt19937 eng(rd());
@@ -91,13 +91,12 @@ static std::string choose_texture()
   return texture;
 }
 
-std::vector<Character> create_population(const World& w,
-				      unsigned int nb_population)
+std::vector<Character> create_population(const World& w)
 {
   auto population = std::vector<Character>{};
 
   // Create characters
-  for (unsigned int i = 0; i < nb_population; ++i)
+  for (unsigned int i = 0; i < SIZE_POPULATION; ++i)
   {
     std::string texture = "";
 
@@ -114,7 +113,8 @@ std::vector<Character> create_population(const World& w,
   std::srand(std::time(0));
   for (auto& person : population)
   {
-    for (auto n = 0u; n < 200 * 10; ++n)
+    // FIXME LENGTH DNA SHOULD be properly defined somewhere
+    for (auto n = 0u; n < 200; ++n)
     {
       int r_nb = std::rand() % 8; // Mode the number of instruction
       person.add_to_DNA(static_cast<Character::Action>(r_nb));

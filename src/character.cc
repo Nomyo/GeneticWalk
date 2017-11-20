@@ -34,25 +34,27 @@ void Character::add_to_DNA(Action a)
   DNA_instructions_.emplace_back(a);
 }
 
-void Character::update()
+void Character::update(const World& w)
 {
-  if (DNA_index_ > DNA_instructions_.size() - 1)
-    return;
-
   switch (state_)
   {
   case CharacterState::ALIVE:
-    update_living();
+    update_living(w);
     break;
   case CharacterState::FALLING:
     update_falling();
     break;
   case CharacterState::DEAD:
     break;
+  case CharacterState::DONE:
+    break;
   default:
     assert(0);
     break;
   }
+
+  if (DNA_index_ > DNA_instructions_.size() - 1)
+    state_ = CharacterState::DEAD;
 }
 
 void Character::update_falling()
@@ -61,7 +63,7 @@ void Character::update_falling()
   increase_position(direction_ * speed_);
 }
 
-void Character::update_living()
+void Character::update_living(const World& w)
 {
   switch (DNA_instructions_[DNA_index_++])
   {
@@ -105,4 +107,45 @@ void Character::update_living()
   if ((position.x < 0 || position.x > 100) ||
       (position.z < 0|| position.z > 100))
     state_ = CharacterState::FALLING;
+
+  if (w.in_endzone(position))
+    state_ = CharacterState::DONE;
+
+  positions_[position] += 1;
+}
+
+
+auto Character::get_DNA() const -> const std::vector<Action>&
+{
+  return DNA_instructions_;
+}
+
+void Character::switch_DNA(unsigned int index, Action a)
+{
+  DNA_instructions_[index] = a;
+}
+
+void Character::replace_DNA(const std::vector<Action>& dna)
+{
+  DNA_instructions_ = dna;
+}
+
+void Character::set_state(CharacterState s)
+{
+  state_ = s;
+}
+
+auto Character::get_state() const -> CharacterState
+{
+  return state_;
+}
+
+auto Character::get_position_passed() const -> const Pos_map
+{
+  return positions_;
+}
+
+bool Character::dead_or_done() const
+{
+  return state_ != CharacterState::ALIVE;
 }
