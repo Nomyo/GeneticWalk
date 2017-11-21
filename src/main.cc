@@ -6,6 +6,7 @@ int start_opengl()
   if (!window)
     return 1;
   auto& global_conf = GlobalConf::get_instance();
+  init_character_models();
   auto camera = global_conf.get_camera();
   camera->set_camera(glm::vec3(30.0f, 15.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),
 		     90.0f, 0.0f);
@@ -69,10 +70,10 @@ int start_opengl()
 
     if (std::all_of(population.begin(), population.end(), [](Character c)
 		    { return c.dead_or_done(); }))
-      {
-	std::cout << "GEN : " << nb_gen++ << std::endl;
-	population = create_next_generation(population, world);
-      }
+    {
+      std::cout << "GEN : " << nb_gen++ << std::endl;
+      population = create_next_generation(population, world);
+    }
 
     glfwSwapBuffers(window);
     glfwPollEvents();

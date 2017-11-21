@@ -8,7 +8,7 @@
 class Entity
 {
 public:
-  Entity(const Model& model, glm::vec3 position, glm::vec3 rotate, float scale);
+  Entity(Model* model, glm::vec3 position, glm::vec3 rotate, float scale);
   virtual ~Entity();
 
   void increase_position(glm::vec3 p);
@@ -16,12 +16,12 @@ public:
   void increase_rotate(glm::vec3 r);
   void decrease_rotate(glm::vec3 r);
 
-  void set_model(const Model& model);
+  void set_model(Model* model);
   void set_position(glm::vec3 position);
   void set_direction(glm::vec3 direction);
   void set_scale(float scale);
 
-  Model get_model() const;
+  Model *get_model() const;
   glm::vec3 get_position() const;
   float get_scale() const;
   glm::vec3 get_rotation_axis() const;
@@ -31,7 +31,7 @@ protected:
   glm::vec3 direction_;
 
 private:
-  Model model_;
+  Model *model_;
   glm::vec3 position_;
   glm::vec3 rotate_;
   float scale_;

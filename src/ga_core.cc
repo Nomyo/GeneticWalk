@@ -2,6 +2,8 @@
 #include <ctime>
 #include <functional>
 #include <limits>
+#include <chrono>
+#include <thread>
 
 using CState = Character::CharacterState;
 
@@ -57,15 +59,16 @@ void mutation(Character& c)
   for (auto n = 0u; n <  c.get_DNA().size(); ++n)
   {
     if (rand_mut() == 0)
-      c.switch_DNA(n, static_cast<Character::Action>(rand_dna()));
+    {
+      for (auto i = n; n < c.get_DNA().size() && i < 20; ++i, ++n)
+	c.switch_DNA(i, static_cast<Character::Action>(rand_dna()));
+    }
   }
 }
 
 Character gen_offspring(const Character& c1, const Character& c2, const World& w)
 {
-  auto model = Model("models/characters/Models/Non-rigged/basicCharacter.obj",
-		     choose_texture(), "", false);
-  Character offspring(Entity(model, w.get_startpoint(),
+  Character offspring(Entity(choose_model(), w.get_startpoint(),
 			     glm::vec3{0.0f, 0.0f, 0.0f}, 0.11f));
   offspring.set_state(Character::CharacterState::ALIVE);
   offspring.replace_DNA(uniform_crossover(c1, c2));
@@ -73,6 +76,8 @@ Character gen_offspring(const Character& c1, const Character& c2, const World& w
 
   return offspring;
 }
+
+static double fit_max = -10000.0;
 
 double fitness(const Character& c, const World& w)
 {
@@ -94,6 +99,19 @@ double fitness(const Character& c, const World& w)
 
   if (c_state == CState::FALLING || c_state == CState::DEAD)
     fit += DEATH_PENALTY;
+  else
+  {
+    fit -= w.dist_to_endzone(c.get_position()) * 10.0; // COEFF 2
+
+    if (c_state == CState::DONE)
+      fit += DONE_PENALTY;
+
+    if (c_state == CState::SUCCESS)
+      fit -= SUCCESS_BONUS;
+  }
+
+  if (-fit > fit_max)
+    std::cout << "FIT_MAX : " << fit_max << std::endl;
 
   return -fit;
 }
@@ -125,8 +143,8 @@ std::vector<Character> create_next_generation(const std::vector<Character>& pop,
   // 80% of the next generation is composed of new offspring
   while (nb_new_pop != SIZE_POPULATION - (SIZE_POPULATION / 100 * 20))
   {
-    auto parent1 = tournament_selection(pop, 2, w);
-    auto parent2 = tournament_selection(pop, 2, w);
+    auto parent1 = tournament_selection(pop, 3, w);
+    auto parent2 = tournament_selection(pop, 3, w);
     auto offspring = gen_offspring(parent1, parent2, w);
     next_pop.push_back(offspring);
     nb_new_pop++;
@@ -140,5 +158,6 @@ std::vector<Character> create_next_generation(const std::vector<Character>& pop,
     nb_new_pop++;
   }
 
+  std::this_thread::sleep_for(std::chrono::seconds(1));
   return next_pop;
 }

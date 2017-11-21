@@ -1,6 +1,6 @@
 #include <entity.hh>
 
-Entity::Entity(const Model& model, glm::vec3 position, glm::vec3 rotate,
+Entity::Entity(Model *model, glm::vec3 position, glm::vec3 rotate,
 	       float scale)
   : direction_(glm::vec3{0.0f, 0.0f, 1.0f})
   , model_(model)
@@ -39,7 +39,7 @@ void Entity::decrease_rotate(glm::vec3 r)
   rotate_.z -= r.z;
 }
 
-void Entity::set_model(const Model& model)
+void Entity::set_model(Model *model)
 {
   model_ = model;
 }
@@ -59,7 +59,7 @@ void Entity::set_scale(float scale)
   scale_ = scale;
 }
 
-Model Entity::get_model() const
+Model *Entity::get_model() const
 {
   return model_;
 }

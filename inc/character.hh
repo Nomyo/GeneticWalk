@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <memory>
 
 #include <world.hh>
 
@@ -24,6 +25,7 @@ class Character : public Entity
 public:
   using Pos_map = std::map<glm::vec3, unsigned int, GVec3Comp>;
   static std::vector<std::string> character_textures;
+  static std::vector<std::shared_ptr<Model>> character_models;
 
   enum class Action : std::int8_t
   {
@@ -42,13 +44,14 @@ public:
     ALIVE,
     FALLING,
     DONE,
-    DEAD
+    DEAD,
+    SUCCESS
   };
 
 public:
-  Character(const Model& model, glm::vec3 position, glm::vec3 rotate,
+  Character(Model *model, glm::vec3 position, glm::vec3 rotate,
 	    float scale);
-  Character(const Model& model, glm::vec3 position, glm::vec3 rotate,
+  Character(Model *model, glm::vec3 position, glm::vec3 rotate,
 	    float scale, std::vector<Action> dna);
   Character(const Entity& e, std::vector<Action> dna);
   Character(const Entity& entity);

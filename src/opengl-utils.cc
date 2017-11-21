@@ -77,7 +77,20 @@ GLFWwindow *window_init()
   return window;
 }
 
-std::string choose_texture()
+void init_character_models()
+{
+  for (auto n = 0u; n < Character::character_textures.size(); ++n)
+  {
+    std::string texture = "models/characters/Skins/Basic/" +
+      Character::character_textures[n] + ".png";
+    std::shared_ptr<Model> p(new Model("models/characters/Models/Non-rigged/basicCharacter.obj",
+				 texture, "", false));
+    Character::character_models.push_back(p);
+  }
+}
+
+
+Model *choose_model()
 {
   std::random_device rd;
   std::mt19937 eng(rd());
@@ -85,10 +98,8 @@ std::string choose_texture()
 
   auto rand = std::bind(distr, eng);
   auto r = rand();
-  std::string texture = "models/characters/Skins/Basic/" +
-    Character::character_textures[r] + ".png";
 
-  return texture;
+  return Character::character_models[r].get();
 }
 
 std::vector<Character> create_population(const World& w)
@@ -100,10 +111,7 @@ std::vector<Character> create_population(const World& w)
   {
     std::string texture = "";
 
-    auto model = Model("models/characters/Models/Non-rigged/basicCharacter.obj",
-		       choose_texture(), "", false);
-
-    auto orc = Character(Entity(model, w.get_startpoint(),
+    auto orc = Character(Entity(choose_model(), w.get_startpoint(),
 				glm::vec3{0.0f, 0.0f, 0.0f}, 0.11f));
 
     population.push_back(orc);
@@ -114,7 +122,7 @@ std::vector<Character> create_population(const World& w)
   for (auto& person : population)
   {
     // FIXME LENGTH DNA SHOULD be properly defined somewhere
-    for (auto n = 0u; n < 200; ++n)
+    for (auto n = 0u; n < 400; ++n)
     {
       int r_nb = std::rand() % 8; // Mode the number of instruction
       person.add_to_DNA(static_cast<Character::Action>(r_nb));

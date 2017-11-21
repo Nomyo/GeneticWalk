@@ -4,6 +4,8 @@
 #include <world.hh>
 
 #define DEATH_PENALTY 1000
+#define DONE_PENALTY 300
+#define SUCCESS_BONUS 500
 #define SIZE_POPULATION 50
 
 /**

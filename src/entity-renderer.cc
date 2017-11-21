@@ -14,7 +14,7 @@ void EntityRenderer::render(const std::vector<Entity>& entities)
   for (const auto& e : entities)
   {
     prepare_instance(e);
-    e.get_model().draw(shader_);
+    e.get_model()->draw(shader_);
   }
 }
 
@@ -23,7 +23,7 @@ void EntityRenderer::render(const std::vector<Character>& characters)
   for (const auto& e : characters)
   {
     prepare_instance(e);
-    e.get_model().draw(shader_);
+    e.get_model()->draw(shader_);
   }
 }
 

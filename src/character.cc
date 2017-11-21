@@ -9,7 +9,9 @@ std::vector<std::string> Character::character_textures =
   "skin_soldier"
 };
 
-Character::Character(const Model& model, glm::vec3 position, glm::vec3 rotate,
+std::vector<std::shared_ptr<Model>> Character::character_models{};
+
+Character::Character(Model *model, glm::vec3 position, glm::vec3 rotate,
 	  float scale)
   : Entity(model, position, rotate, scale)
 { }
@@ -18,7 +20,7 @@ Character::Character(const Entity& e)
   : Entity(e)
 { }
 
-Character::Character(const Model& model, glm::vec3 position, glm::vec3 rotate,
+Character::Character(Model *model, glm::vec3 position, glm::vec3 rotate,
 		     float scale, std::vector<Action> dna)
   : Entity(model, position, rotate, scale)
   , DNA_instructions_(dna)
@@ -48,13 +50,15 @@ void Character::update(const World& w)
     break;
   case CharacterState::DONE:
     break;
+  case CharacterState::SUCCESS:
+    break;
   default:
     assert(0);
     break;
   }
 
   if (DNA_index_ > DNA_instructions_.size() - 1)
-    state_ = CharacterState::DEAD;
+    state_ = CharacterState::DONE;
 }
 
 void Character::update_falling()
@@ -109,7 +113,7 @@ void Character::update_living(const World& w)
     state_ = CharacterState::FALLING;
 
   if (w.in_endzone(position))
-    state_ = CharacterState::DONE;
+    state_ = CharacterState::SUCCESS;
 
   positions_[position] += 1;
 }

@@ -23,9 +23,14 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 unsigned int gen_texture(const std::string& path);
 
 /**
+ *
+ */
+void init_character_models();
+
+/**
  * Choose a random character texture
  */
-std::string choose_texture();
+Model *choose_model();
 
 /**
  * Initialisation of the screen
