@@ -16,9 +16,9 @@ int start_opengl()
   Shader world_shader("shaders/world.vs", "shaders/world.fs");
 
   struct zone ez;
-  ez.coord = glm::vec2(30.0f, 30.0f);
+  ez.coord = glm::vec2(25.0f, 45.0f);
   ez.radius = 1.f;
-  auto world = World(50, 50, ez, glm::vec3(15.0f, 0.0f, 15.0f));
+  auto world = World(50, 50, ez, glm::vec3(25.0f, 0.0f, 5.0f));
   auto population = create_population(world);
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

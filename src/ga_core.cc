@@ -49,7 +49,7 @@ void mutation(Character& c)
   std::random_device rd;
   std::mt19937 eng(rd());
   std::uniform_int_distribution<> distr_dna(0, 7);
-  std::uniform_int_distribution<> distr_mutation(0, 1000);
+  std::uniform_int_distribution<> distr_mutation(0, 100);
 
   auto rand_dna = std::bind(distr_dna, eng);
   auto rand_mut = std::bind(distr_mutation, eng);
@@ -60,7 +60,7 @@ void mutation(Character& c)
   {
     if (rand_mut() == 0)
     {
-      for (auto i = n; n < c.get_DNA().size() && i < 20; ++i, ++n)
+      for (auto i = n; n < c.get_DNA().size() && i < 5; ++i, ++n)
 	c.switch_DNA(i, static_cast<Character::Action>(rand_dna()));
     }
   }
@@ -78,7 +78,7 @@ Character gen_offspring(const Character& c1, const Character& c2, const World& w
 }
 
 static double fit_max = -10000.0;
-
+static int gen = 0;
 double fitness(const Character& c, const World& w)
 {
   const auto& c_state = c.get_state();
@@ -91,7 +91,8 @@ double fitness(const Character& c, const World& w)
   {
     if(p.second > 1)
       nb_repeat_step += p.second;
-
+    if (gen % 10 == 0)
+      std::cout << "nb_repeat_step := " << nb_repeat_step << std::endl;
     total_distance += w.dist_to_endzone(p.first);
   }
 
@@ -101,8 +102,6 @@ double fitness(const Character& c, const World& w)
     fit += DEATH_PENALTY;
   else
   {
-    fit -= w.dist_to_endzone(c.get_position()) * 10.0; // COEFF 2
-
     if (c_state == CState::DONE)
       fit += DONE_PENALTY;
 
@@ -110,8 +109,13 @@ double fitness(const Character& c, const World& w)
       fit -= SUCCESS_BONUS;
   }
 
+  fit += w.dist_to_endzone(c.get_position()) * 50.0; // COEFF 100
+
   if (-fit > fit_max)
+  {
+    fit_max = -fit;
     std::cout << "FIT_MAX : " << fit_max << std::endl;
+  }
 
   return -fit;
 }
@@ -135,6 +139,7 @@ Character tournament_selection(const std::vector<Character>& pop,
 std::vector<Character> create_next_generation(const std::vector<Character>& pop,
 					      const World& w)
 {
+  gen++;
   auto next_pop = std::vector<Character>{};
   next_pop.reserve(pop.size());
   auto nb_new_pop = 0;
@@ -153,11 +158,10 @@ std::vector<Character> create_next_generation(const std::vector<Character>& pop,
   // 20% of the next generation is composed of prev generation individual
   while (nb_new_pop != SIZE_POPULATION)
   {
-    auto individual = tournament_selection(pop, 2, w);
+    auto individual = tournament_selection(pop, 3, w);
     next_pop.push_back(individual);
     nb_new_pop++;
   }
 
-  std::this_thread::sleep_for(std::chrono::seconds(1));
   return next_pop;
 }

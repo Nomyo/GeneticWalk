@@ -122,7 +122,7 @@ std::vector<Character> create_population(const World& w)
   for (auto& person : population)
   {
     // FIXME LENGTH DNA SHOULD be properly defined somewhere
-    for (auto n = 0u; n < 400; ++n)
+    for (auto n = 0u; n < 1000; ++n)
     {
       int r_nb = std::rand() % 8; // Mode the number of instruction
       person.add_to_DNA(static_cast<Character::Action>(r_nb));
