@@ -28,8 +28,8 @@ private:
     Camera *camera_;
 
 public:
-    static constexpr unsigned int SCR_WIDTH = 1300;
-    static constexpr unsigned int SCR_HEIGHT = 950;
+    static constexpr unsigned int SCR_WIDTH = 2400;
+    static constexpr unsigned int SCR_HEIGHT = 1850;
 
     static float lastX_;
     static float lastY_;

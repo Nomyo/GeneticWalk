@@ -5,6 +5,7 @@
 #include <stb_image.h>
 
 #include <string>
+#include <random>
 
 #include <glob_conf.hh>
 #include <entity.hh>

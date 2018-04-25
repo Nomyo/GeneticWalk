@@ -13,7 +13,7 @@
 
 struct GVec3Comp
 {
-  bool operator()(const glm::vec3& lhs, const glm::vec3& rhs)
+  bool operator()(const glm::vec3& lhs, const glm::vec3& rhs) const
     {
       return (lhs.x < rhs.x || lhs.x == rhs.x ) &&
 	(lhs.y < rhs.y || lhs.y == rhs.y) && (lhs.z < rhs.z);

@@ -1,4 +1,5 @@
 #include <model.hh>
+#include <assimp/Importer.hpp>
 
 Model::Model(const std::string& model_path, bool gamma)
   : gamma_correction_(gamma)
