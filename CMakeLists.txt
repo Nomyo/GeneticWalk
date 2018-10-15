@@ -1,3 +1,4 @@
+
 cmake_minimum_required(VERSION 3.5)
 project(GeneticWalk)
 
@@ -32,6 +33,8 @@ set(
   src/entity.cc
   src/entity-renderer.cc
   src/ga_core.cc
+  src/light-renderer.cc
+  src/light.cc
   )
 
 

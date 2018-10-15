@@ -41,7 +41,7 @@ void World::create_mesh()
     for (unsigned int x = 0; x < width_; ++x)
     {
       vertices.emplace_back(Vertex{glm::vec3(x, 0.0f, z),
-	    glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(x, z),
+          glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(x, z),
 	    glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 0.0f, 0.0f}});
     }
   }
@@ -62,9 +62,9 @@ void World::create_mesh()
 
   std::vector<Texture> textures;
   Texture texture;
-  texture.id = TextureFromFile("textures/grass.jpg" ,false);
+  texture.id = TextureFromFile("textures/grass2.jpg" ,false);
   texture.type = "texture_diffuse";
-  texture.path = "textures/grass.jpg";
+  texture.path = "textures/grass2.jpg";
   textures.push_back(texture);
 
   Texture texture2;

@@ -66,11 +66,12 @@ public:
   void replace_DNA(const std::vector<Action>& dna);
   void set_state(CharacterState s);
   CharacterState get_state() const;
+  void reset(const World& w);
   const Pos_map get_position_passed() const;
   bool dead_or_done() const;
 
 private:
-  float speed_ = 0.25f;
+  float speed_ = 0.15f;
   std::vector<Action> DNA_instructions_;
   std::uint64_t DNA_index_ = 0;
   CharacterState state_ = CharacterState::ALIVE;

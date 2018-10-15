@@ -3,7 +3,10 @@
 #include <character.hh>
 #include <world.hh>
 
-#define DEATH_PENALTY 1000
+#define DEATH_PENALTY 7000
+#define REPEAT_PENALTY 10
+#define SPEED_PENALTY 2
+#define DISTANCE_PENALTY 5
 #define DONE_PENALTY 300
 #define SUCCESS_BONUS 500
 #define SIZE_POPULATION 50
@@ -11,7 +14,7 @@
 /**
  * Compute the fitness of the corresponding character
  */
-double fitness(const Character& c);
+double fitness(const Character& c, const World& w);
 
 /**
  * Perform a uniform crossover between two characters
