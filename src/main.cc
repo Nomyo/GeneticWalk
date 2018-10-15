@@ -1,5 +1,7 @@
 #include <main.hh>
 #include <light.hh>
+#include <skybox.hh>
+#include <skybox-renderer.hh>
 
 int start_opengl()
 {
@@ -15,6 +17,13 @@ int start_opengl()
     // Create our shader
     Shader our_shader("shaders/model.vs", "shaders/model.fs");
     Shader world_shader("shaders/world.vs", "shaders/world.fs");
+    Shader skybox_shader("shaders/skybox.vs", "shaders/skybox.fs");
+
+    std::vector<std::string> faces{ "textures/sky-left.jpg", "textures/sky-right.jpg",
+        "textures/sky-top.jpg", "textures/sky-bottom.jpg", "textures/sky-front.jpg",
+        "textures/sky-back.jpg" };
+    auto skybox = Skybox(faces);
+    skybox.init(skybox_shader);
 
     struct zone ez;
     ez.coord = glm::vec2(25.0f, 45.0f);
@@ -60,6 +69,16 @@ int start_opengl()
         EntityRenderer er(our_shader, projection, view, light);
         er.render(population);
 
+        glDepthFunc(GL_LEQUAL);
+        view = glm::mat4(glm::mat3(camera->get_view_matrix()));
+        SkyboxRenderer skybox_rd(skybox_shader, projection, view);
+        skybox_rd.render(skybox);
+        glDepthFunc(GL_LESS);
+
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+
         // update_population
         // -----------------
         //if (updateFrame >= 0.005f)
@@ -77,8 +96,6 @@ int start_opengl()
             population = create_next_generation(population, world);
         }
 
-        glfwSwapBuffers(window);
-        glfwPollEvents();
     }
 
     glfwTerminate();

@@ -23,6 +23,8 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height);
  */
 unsigned int gen_texture(const std::string& path);
 
+unsigned int loadCubemap(const std::vector<std::string>& faces);
+
 /**
  *
  */

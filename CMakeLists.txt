@@ -35,6 +35,8 @@ set(
   src/ga_core.cc
   src/light-renderer.cc
   src/light.cc
+  src/skybox-renderer.cc
+  src/skybox.cc
   )
 
 
