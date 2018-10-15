@@ -16,12 +16,17 @@ class World
 {
 public:
   World(unsigned int width, unsigned int height);
+  World(const std::string& heightmap, struct zone z,
+      glm::vec3 startpoint);
+
   World(unsigned int width, unsigned int height, struct zone z,
 	glm::vec3 startpoint);
   World(Mesh mesh);
   World(Mesh mesh, struct zone z);
 
   ~World() = default;
+
+  void read_height_map(const std::string& heightmap);
 
   void draw(Shader shader);
   void create_mesh();

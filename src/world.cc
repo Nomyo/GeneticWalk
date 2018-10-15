@@ -18,6 +18,14 @@ World::World(unsigned int width, unsigned int height, struct zone z,
   create_mesh();
 }
 
+World::World(const std::string& heightmap, struct zone z,
+    glm::vec3 startpoint)
+    : endzone_(z)
+    , startpoint_(startpoint)
+{
+    read_height_map(heightmap);
+}
+
 World::World(Mesh mesh)
   : mesh_(mesh)
 {
@@ -29,6 +37,65 @@ World::World(Mesh mesh, struct zone z)
   , endzone_(z)
 {
 
+}
+
+void World::read_height_map(const std::string& heightmap)
+{
+    int width;
+    int height;
+    int nr_channels;
+
+    unsigned char *data = stbi_load(heightmap.c_str(), &width, &height, &nr_channels, 3);
+    assert(data);
+
+    width_ = width;
+    height_ = height;
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+
+    for (int z = 0; z < height_; ++z) {
+        for (int x = 0; x < width_; ++x) {
+            unsigned char* pixelOffset = data + (x + height_ * z) * nr_channels;
+            unsigned char r = pixelOffset[0];
+            unsigned char g = pixelOffset[1];
+            unsigned char b = pixelOffset[2];
+            auto height = ((r + g + b) / 3.0f) / 15.0f;
+            vertices.emplace_back(Vertex{ glm::vec3(x, height - 16, z),
+                glm::vec3(0.0f, 2.0f, 0.0f), glm::vec2(x, z),
+                glm::vec3{ 0.0f, 0.0f, 0.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f } });
+        }
+    }
+
+    stbi_image_free(data);
+
+    for (unsigned int z = 0; z < height_ - 1; ++z)
+    {
+        for (unsigned int x = 0; x < width_ - 1; ++x)
+        {
+            int start = x + z * height_;
+            indices.push_back(start);
+            indices.push_back(start + 1);
+            indices.push_back(start + height_);
+            indices.push_back(start + 1);
+            indices.push_back(start + 1 + height_);
+            indices.push_back(start + height_);
+        }
+    }
+
+    std::vector<Texture> textures;
+    Texture texture;
+    texture.id = TextureFromFile("textures/grass2.jpg", false);
+    texture.type = "texture_diffuse";
+    texture.path = "textures/grass2.jpg";
+    textures.push_back(texture);
+
+    Texture texture2;
+    texture2.id = TextureFromFile("textures/shulker_top_red.png", false);
+    texture2.type = "texture_diffuse";
+    texture2.path = "shulker_top_red.png";
+    textures.push_back(texture2);
+
+    mesh_ = Mesh(vertices, indices, textures);
 }
 
 void World::create_mesh()
@@ -62,13 +129,13 @@ void World::create_mesh()
 
   std::vector<Texture> textures;
   Texture texture;
-  texture.id = TextureFromFile("textures/grass2.jpg" ,false);
+  texture.id = TextureFromFile("textures/grass2.jpg", false);
   texture.type = "texture_diffuse";
   texture.path = "textures/grass2.jpg";
   textures.push_back(texture);
 
   Texture texture2;
-  texture2.id = TextureFromFile("textures/shulker_top_red.png" ,false);
+  texture2.id = TextureFromFile("textures/shulker_top_red.png", false);
   texture2.type = "texture_diffuse";
   texture2.path = "shulker_top_red.png";
   textures.push_back(texture2);

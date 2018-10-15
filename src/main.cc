@@ -19,8 +19,8 @@ int start_opengl()
     struct zone ez;
     ez.coord = glm::vec2(25.0f, 45.0f);
     ez.radius = 1.f;
-    auto world = World(50, 50, ez, glm::vec3(25.0f, 0.0f, 5.0f));
-    auto light = Light(glm::vec3{25.0f , 20.0f, 25.0f }, glm::vec3{ 1.0f, 1.0f, 1.0f });
+    auto world = World("map/height_map.jpg", ez, glm::vec3(25.0f, 0.0f, 5.0f));
+    auto light = Light(glm::vec3{25.0f , 40.0f, 25.0f }, glm::vec3{ 1.0f, 1.0f, 1.0f });
     auto population = create_population(world);
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
