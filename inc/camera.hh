@@ -40,6 +40,8 @@ public:
     virtual void process_mouse_movement(float xoffset, float yoffset,
 					GLboolean constrain_pitch = true);
     virtual void print_debug();
+    void inc_view_pos(const glm::vec3& position);
+    void invert_pitch();
 
 protected:
     void update_vectors();

@@ -37,6 +37,8 @@ set(
   src/light.cc
   src/skybox-renderer.cc
   src/skybox.cc
+  src/water-renderer.cc
+  src/water.cc
   )
 
 

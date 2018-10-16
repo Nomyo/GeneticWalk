@@ -95,6 +95,25 @@ void World::read_height_map(const std::string& heightmap)
     texture2.path = "shulker_top_red.png";
     textures.push_back(texture2);
 
+    Texture texture3;
+    texture3.id = TextureFromFile("textures/sand.jpg", false);
+    texture3.type = "texture_diffuse";
+    texture3.path = "textures/sand.jpg";
+    textures.push_back(texture3);
+
+    Texture texture4;
+    texture4.id = TextureFromFile("textures/grass_dirt.jpg", false);
+    texture4.type = "texture_diffuse";
+    texture4.path = "textures/grass_dirt.jpg";
+    textures.push_back(texture4);
+
+    Texture texture5;
+    texture5.id = TextureFromFile("map/texture_map.png", false);
+    texture5.type = "texture_diffuse";
+    texture5.path = "map/texture_map.png";
+    textures.push_back(texture5);
+
+
     mesh_ = Mesh(vertices, indices, textures);
 }
 
