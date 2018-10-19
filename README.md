@@ -1,21 +1,32 @@
 # GeneticWalk
-My first project that deals with genetic algorithm. In this project I tried to implement
-some simple pathfinding with genetic algorithm. 
+I have learn about the theory of genetic algorithms while ago but I have never put this knowledge into practice.
+Thus I decided to do a project that implements a genetic algorithm to find the shortest path to a destination.
+In the samples bellow the destination is the pink circle. In this project the DNA of each individual is defined by an move toward
+a direction.
 
-I used OpenGL for fun because I wanted to refresh some 3D knowledge. Based on this simple version I will in the future change the map, put obstacles,
-and many more things !
+I used OpenGL because I think having a visual representation is more enjoyable and also more easy to debug.
+Based on this version I can later: change the map, put obstacles, and many more things!
 
-## Basic samples
+## Samples
 
-Bellow a simple sample of the first generation tracing their own way. Note that the red point is the destination point.
+Bellow a sample of the first generation tracing their own way. We can see that each individual goes totally randomly in the map.
 
 <p align="center">                                                                                                                                                      
-<img src =samples/first_gen.gif/>                                                    
+<img src =samples/first_gen.png/>                                                    
 </p>
 
-40 Generations later, we see that many people overlap though there is sometimes mutation. There is still not the global optimum
-path, but it is way better than the first generation. I should work on the fitness function again, and punishing much more the repeated position in order to tend to remove all the 'LEFT' => 'RIGHT' => LEFT' kind of move.
+25 generations later, we can see that the individuals seem to have found a decent direction toward the destination. 
+The computation of the fitness is based on several parameters like: the death of the individual (out of the map), the distance to the destination, the average distance during their life, the speed depending of the relief (slower depending of the hill) and the water, 
+repeated position, etc.
 
 <p align="center">                                                                                                                                                      
-<img src =samples/last_gen.gif/>                                                    
+<img src =samples/mid2gen.png/>                                                    
+<img src =samples/midgen.png/>                                                    
+</p>
+
+
+With all these variables I don't have to write explicitely to go to the destination by going between the lakes, it just works thanks to promotion according to the fitness of each individual. At the 60th generation, some individuals have reached the destination. The bright yellow model is the best fit of the previous generation.
+
+<p align="center">                                                                                                                                                      
+<img src =samples/destination.png/>                                                    
 </p>
