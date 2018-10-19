@@ -21,6 +21,7 @@ int start_opengl()
     Shader world_shader("shaders/world.vs", "shaders/world.fs");
     Shader skybox_shader("shaders/skybox.vs", "shaders/skybox.fs");
     Shader water_shader("shaders/water.vs", "shaders/water.fs");
+    Shader tree_shader("shaders/tree.vs", "shaders/tree.fs");
 
     std::vector<std::string> faces{ "textures/sky-left.jpg", "textures/sky-right.jpg",
         "textures/sky-top.jpg", "textures/sky-bottom.jpg", "textures/sky-front.jpg",
@@ -31,11 +32,25 @@ int start_opengl()
     struct zone ez;
     ez.coord = glm::vec2(25.0f, 45.0f);
     ez.radius = 1.f;
-    auto world = World("map/height_map.jpg", ez, glm::vec3(25.0f, 0.0f, 5.0f));
+    auto world = World("map/height_map.jpg", ez, glm::vec2(25.0f, 5.0f));
     auto light = Light(glm::vec3{25.0f , 40.0f, 25.0f }, glm::vec3{ 1.0f, 1.0f, 1.0f });
     auto population = create_population(world);
-    auto water = Water(glm::vec3{ 0.0f, -1.3f, 0.0f }, 50, 50);
+    auto water = Water(glm::vec3{ 2.0f, -1.3f, 5.0f }, 45, 45);
 
+    // Init environment entities
+    auto tree_model = Model("textures/pine.obj", "textures/pine.png", "", false);
+    auto tree1 = Entity(&tree_model, { 11, world.get_height({ 11, 14 }), 14 }, { 0, 1, 0 }, 0.35);
+    auto tree2 = Entity(&tree_model, { 30, world.get_height({ 30, 20 }), 20 }, { 0, 1, 0 }, 0.35);
+    auto tree3 = Entity(&tree_model, { 33, world.get_height({ 33, 20 }), 20 }, { 0, 1, 0 }, 0.30);
+    auto tree4 = Entity(&tree_model, { 5, world.get_height({ 5, 8 }), 8 }, { 0, 1, 0 }, 0.30);
+    auto tree5 = Entity(&tree_model, { 7, world.get_height({ 7, 6 }), 6 }, { 0, 1, 0 }, 0.25);
+    auto tree6 = Entity(&tree_model, { 45, world.get_height({ 45, 8 }), 8 }, { 0, 1, 0 }, 0.30);
+    auto tree7 = Entity(&tree_model, { 43, world.get_height({ 43, 5 }), 5 }, { 0, 1, 0 }, 0.25);
+    auto tree8 = Entity(&tree_model, { 38, world.get_height({ 38, 16 }), 16 }, { 0, 1, 0 }, 0.35);
+    auto tree9 = Entity(&tree_model, { 36, world.get_height({ 36, 45 }), 45 }, { 0, 1, 0 }, 0.28);
+    auto tree10 = Entity(&tree_model, { 33, world.get_height({ 33, 40 }), 40 }, { 0, 1, 0 }, 0.25);
+    auto tree11 = Entity(&tree_model, { 5, world.get_height({ 5, 46 }), 46 }, { 0, 1, 0 }, 0.28);
+    auto tree12 = Entity(&tree_model, { 12, world.get_height({ 12, 36 }), 36 }, { 0, 1, 0 }, 0.25);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     float updateFrame = 0.0f;
     long nb_gen = 0;
@@ -76,6 +91,10 @@ int start_opengl()
 
             EntityRenderer er(our_shader, projection, view, light);
             er.render(population);
+
+            EntityRenderer tree_rd(tree_shader, projection, view, light);
+            tree_rd.render(std::vector<Entity>{tree1, tree2, tree3, tree4, tree5, tree6, tree7,
+                                               tree8 , tree9, tree10, tree11, tree12});
 
             glDisable(GL_CLIP_PLANE0);
             if (!fb) {

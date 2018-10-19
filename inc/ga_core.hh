@@ -4,9 +4,9 @@
 #include <world.hh>
 
 #define DEATH_PENALTY 7000
-#define REPEAT_PENALTY 10
+#define REPEAT_PENALTY 50
 #define SPEED_PENALTY 2
-#define DISTANCE_PENALTY 5
+#define DISTANCE_PENALTY 50
 #define DONE_PENALTY 300
 #define SUCCESS_BONUS 500
 #define SIZE_POPULATION 50

@@ -31,6 +31,11 @@ Character::Character(const Entity& e, std::vector<Action> dna)
     , DNA_instructions_(dna)
 { }
 
+bool Character::operator==(const Character& entity) const
+{
+    return entity.get_DNA() == this->get_DNA();
+}
+
 void Character::add_to_DNA(Action a)
 {
     DNA_instructions_.emplace_back(a);
@@ -66,7 +71,7 @@ void Character::update_falling()
 {
     direction_ = glm::vec3(0.0f, -1.0f, 0.0f);
     increase_position(direction_ * speed_);
-    positions_[get_position()] += 0.5;
+    positions_[get_position()] += 1;
 }
 
 void Character::update_living(const World& w)
@@ -75,44 +80,57 @@ void Character::update_living(const World& w)
     {
     case Action::MOVE_WEST:
         direction_ = glm::vec3(1.0f, 0.0f, 0.0f);
-        increase_position(direction_ * speed_);
         break;
     case Action::MOVE_NORTH:
         direction_ = glm::vec3(0.0f, 0.0f, 1.0f);
-        increase_position(direction_ * speed_);
         break;
     case Action::MOVE_EAST:
         direction_ = glm::vec3(-1.0f, 0.0f, 0.0f);
-        increase_position(direction_ * speed_);
         break;
     case Action::MOVE_SOUTH:
         direction_ = glm::vec3(0.0f, 0.0f, -1.0f);
-        increase_position(direction_ * speed_);
         break;
     case Action::MOVE_NORTH_E:
         direction_ = glm::vec3(-1.0f, 0.0f, 1.0f);
-        increase_position(direction_ * speed_);
         break;
     case Action::MOVE_NORTH_W:
         direction_ = glm::vec3(1.0f, 0.0f, 1.0f);
-        increase_position(direction_ * speed_);
         break;
     case Action::MOVE_SOUTH_E:
         direction_ = glm::vec3(-1.0f, 0.0f, -1.0f);
-        increase_position(direction_ * speed_);
         break;
     case Action::MOVE_SOUTH_W:
         direction_ = glm::vec3(1.0f, 0.0f, -1.0f);
-        increase_position(direction_ * speed_);
         break;
     default:
         break;
     }
 
+    glm::vec3 futur_position = get_position() + (direction_ * speed_);
+    float delta_height = std::fabs(w.get_height(glm::vec2(futur_position.x, futur_position.z)) - get_position().y);
+    
+    // if no fall
+    if (delta_height < 100) {
+        float n_speed = std::fmax(speed_ - delta_height * HILL_FACTOR, 0);
+        increase_position(direction_ * n_speed);
+    }
+    else {
+        increase_position(direction_ * speed_);
+    }
+
+
     glm::vec3 position = get_position();
     if ((position.x < 0 || position.x > 50) ||
         (position.z < 0 || position.z > 50))
         state_ = CharacterState::FALLING;
+    else {
+        float height = w.get_height(glm::vec2(position.x, position.z));
+        if (height <= -1.0) { // In water 
+            height = -1;
+        }
+        set_position(glm::vec3(position.x, height, position.z));
+    }
+
 
     if (w.in_endzone(position))
         state_ = CharacterState::SUCCESS;
@@ -124,7 +142,8 @@ void Character::reset(const World& w)
 {
     DNA_index_ = 0;
     state_ = CharacterState::ALIVE;
-    set_position(w.get_startpoint());
+    positions_.clear();
+    set_position(glm::vec3(w.get_startpoint().x, 0, w.get_startpoint().y));
 }
 
 
@@ -161,4 +180,19 @@ auto Character::get_position_passed() const -> const Pos_map
 bool Character::dead_or_done() const
 {
     return state_ != CharacterState::ALIVE;
+}
+
+void Character::set_leader()
+{
+    leader_ = true;
+}
+
+void Character::set_not_leader()
+{
+    leader_ = false;
+}
+
+bool Character::is_leader() const
+{
+    return leader_;
 }

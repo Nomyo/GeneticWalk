@@ -25,6 +25,13 @@ void EntityRenderer::render(const std::vector<Character>& characters)
   for (const auto& e : characters)
   {
     prepare_instance(e);
+    if (e.is_leader()) {
+        shader_.setVec3("leaderColor", glm::vec3(15, 15, 1));
+    }
+    else {
+        shader_.setVec3("leaderColor", glm::vec3(1, 1, 1));
+    }
+
     e.get_model()->draw(shader_);
   }
 }

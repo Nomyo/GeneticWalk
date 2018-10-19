@@ -44,3 +44,8 @@ GLFWwindow *window_init();
  * Create population of GA algorithm
  */
 std::vector<Character> create_population(const World& w);
+
+/**
+* Barry centric interpolation between 3 points
+*/
+float barry_centric(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec2 pos);

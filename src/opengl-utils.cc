@@ -9,6 +9,15 @@ void framebuffer_size_callback(GLFWwindow */*window*/, int width, int height)
     glViewport(0, 0, width, height);
 }
 
+float barry_centric(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec2 pos)
+{
+    float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
+    float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
+    float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
+    float l3 = 1.0f - l1 - l2;
+    return l1 * p1.y + l2 * p2.y + l3 * p3.y;
+}
+
 unsigned int gen_texture(const std::string& file)
 {
     unsigned texture;
@@ -144,7 +153,7 @@ std::vector<Character> create_population(const World& w)
     {
         std::string texture = "";
 
-        auto orc = Character(Entity(choose_model(), w.get_startpoint(),
+        auto orc = Character(Entity(choose_model(), glm::vec3(w.get_startpoint().x, 0, w.get_startpoint().y),
             glm::vec3{ 0.0f, 0.0f, 0.0f }, 0.11f));
 
         population.push_back(orc);
@@ -156,7 +165,7 @@ std::vector<Character> create_population(const World& w)
     {
         // FIXME LENGTH DNA SHOULD be properly defined somewhere
         // Must be shortest path from start to destination with according speed.
-        for (auto n = 0u; n < 1000; ++n)
+        for (auto n = 0u; n < 300; ++n)
         {
             int r_nb = std::rand() % 8; // Mode the number of instruction
             person.add_to_DNA(static_cast<Character::Action>(r_nb));

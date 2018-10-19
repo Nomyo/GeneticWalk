@@ -20,6 +20,11 @@ struct GVec3Comp
     }
 };
 
+namespace 
+{
+    float HILL_FACTOR = 0.5;
+};
+
 class Character : public Entity
 {
 public:
@@ -55,6 +60,7 @@ public:
 	    float scale, std::vector<Action> dna);
   Character(const Entity& e, std::vector<Action> dna);
   Character(const Entity& entity);
+  bool operator==(const Character& entity) const;
   ~Character() = default;
 
   void update(const World& w);
@@ -69,9 +75,13 @@ public:
   void reset(const World& w);
   const Pos_map get_position_passed() const;
   bool dead_or_done() const;
+  void set_leader();
+  void set_not_leader();
+  bool is_leader() const;
 
 private:
-  float speed_ = 0.15f;
+  float speed_ = 0.40f;
+  bool leader_ = false;
   std::vector<Action> DNA_instructions_;
   std::uint64_t DNA_index_ = 0;
   CharacterState state_ = CharacterState::ALIVE;

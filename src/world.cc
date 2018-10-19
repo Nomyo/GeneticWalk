@@ -1,5 +1,6 @@
 #include <world.hh>
 #include <model.hh>
+#include <opengl-utils.hh>
 
 World::World(unsigned int width, unsigned int height)
   : width_(width)
@@ -9,7 +10,7 @@ World::World(unsigned int width, unsigned int height)
 }
 
 World::World(unsigned int width, unsigned int height, struct zone z,
-	     glm::vec3 startpoint)
+	     glm::vec2 startpoint)
   : endzone_(z)
   , startpoint_(startpoint)
   , width_(width)
@@ -19,7 +20,7 @@ World::World(unsigned int width, unsigned int height, struct zone z,
 }
 
 World::World(const std::string& heightmap, struct zone z,
-    glm::vec3 startpoint)
+    glm::vec2 startpoint)
     : endzone_(z)
     , startpoint_(startpoint)
 {
@@ -55,7 +56,7 @@ void World::read_height_map(const std::string& heightmap)
 
     for (int z = 0; z < height_; ++z) {
         for (int x = 0; x < width_; ++x) {
-            unsigned char* pixelOffset = data + (x + height_ * z) * nr_channels;
+            unsigned char* pixelOffset = data + (x + width_ * z) * nr_channels;
             unsigned char r = pixelOffset[0];
             unsigned char g = pixelOffset[1];
             unsigned char b = pixelOffset[2];
@@ -167,7 +168,7 @@ void World::draw(Shader shader)
   mesh_.draw(shader);
 }
 
-glm::vec3 World::get_startpoint() const
+glm::vec2 World::get_startpoint() const
 {
   return startpoint_;
 }
@@ -194,4 +195,41 @@ bool World::in_endzone(glm::vec3 position) const
   float sq_endz_r = endzone_.radius * endzone_.radius;
 
   return (nq_endz_x * nq_endz_x + nq_endz_y * nq_endz_y) < sq_endz_r;
+}
+
+float World::get_height(glm::vec2 position_in_world) const
+{
+    const auto& vertices = get_mesh().get_vertices();
+    
+    // Since the world model starts at 0 : x, 0 : y, the position is always
+    // relative to it.
+    // Also size of a square (2 triangles here) equals to 1 according to our map construction.
+
+    float square_size = 1;
+
+    int grid_on_x = std::floor(position_in_world.x / square_size);
+    int grid_on_z = std::floor(position_in_world.y / square_size);
+
+    if (grid_on_x >= width_ - 1|| grid_on_z >= height_ - 1 || grid_on_x < 0 || grid_on_z < 0) {
+        // Out of ground!
+        return -1000;
+    }
+
+    float x_in_grid = std::fmod(position_in_world.x ,square_size) / square_size;
+    float z_in_grid = std::fmod(position_in_world.y, square_size) / square_size;
+
+    float height;
+    if (1 - z_in_grid >= x_in_grid)  {
+        height = barry_centric(glm::vec3(0, vertices[grid_on_x + width_  * grid_on_z].Position.y, 0),
+                      glm::vec3(1, vertices[grid_on_x + 1 + width_ * grid_on_z].Position.y, 0),
+                      glm::vec3(0, vertices[grid_on_x + width_ * (grid_on_z + 1)].Position.y, 1),
+                      glm::vec2(x_in_grid, z_in_grid));
+    }
+    else {
+        height = barry_centric(glm::vec3(1, vertices[grid_on_x + 1 + width_ * grid_on_z].Position.y, 0),
+                      glm::vec3(1, vertices[grid_on_x + 1 + width_ * (grid_on_z + 1)].Position.y, 1),
+                      glm::vec3(0, vertices[grid_on_x + width_ * (grid_on_z + 1)].Position.y, 1),
+                      glm::vec2(x_in_grid, z_in_grid));
+    }
+    return height;
 }

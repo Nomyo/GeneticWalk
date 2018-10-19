@@ -8,6 +8,7 @@ in vec3 pix_pos;
 uniform sampler2D texture_diffuse1;
 uniform vec3 lightPos;
 uniform vec3 lightColor;
+uniform vec3 leaderColor;
 
 void main()
 {
@@ -24,5 +25,6 @@ void main()
     vec3 diffuse = diff * lightColor;
 
     vec3 resultColor = (ambient + diffuse) * textureColor.xyz;
+    resultColor *= leaderColor;
     FragColor = vec4(resultColor.x, resultColor.y, resultColor.z, 1.0f);
 }
